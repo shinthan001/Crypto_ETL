@@ -1,4 +1,5 @@
 import os
+import json
 import requests
 import pandas as pd
 from io import StringIO 
@@ -21,7 +22,7 @@ def get_proxies():
 def get_ssl_cert():
     return os.getenv('SSL_VERIFY')
 
-def request_api(url:str, headers:dict):
+def request_api(url:str, headers:dict=None):
     proxies = get_proxies()
     ssl_cert = get_ssl_cert()
 
@@ -36,9 +37,9 @@ def to_dataframe(response:requests.models.Response):
                     #   ,orient='records', lines=True)
     return df
 
-def to_json(df:pd.DataFrame, tgt_dir:str, fname:str):
-    file_path = f'{tgt_dir}/{fname}.json'
-    os.makedirs(f'{tgt_dir}', exist_ok=True)
+def to_json(df:pd.DataFrame, tgt_dir:str, sub_dir:str, fname:str):
+    file_path = f'{tgt_dir}/{sub_dir}/{fname}.json'
+    os.makedirs(f'{tgt_dir}/{sub_dir}', exist_ok=True)
     try:
         df.to_json(file_path)
                 #    ,orient='records', lines=True)
@@ -47,24 +48,24 @@ def to_json(df:pd.DataFrame, tgt_dir:str, fname:str):
 
     print(f"Successfully saved to {file_path}.\n")
 
-def extract_api(url:str, tgt_dir:str, fname:str, headers:dict=None):
-    response = request_api(url, headers)
-    df = to_dataframe(response)
-    to_json(df,tgt_dir,fname)
+# def extract_api(url:str, tgt_dir:str, fname:str, headers:dict=None):
+#     response = request_api(url, headers)
+#     df = to_dataframe(response)
+#     to_json(df,tgt_dir,fname)
 
-def extract_data():
-    coinslist_api = os.getenv('COINSLIST_EP')
-    coingecko_apikey = os.getenv('APIKEY_COINGECKO')
-    tgt_dir = os.getenv('EXTRACTED_DIR')
+def extract_news(url:str, coin:str, tgt_dir:str, sub_dir:str):
+    url = url.replace('[coin_symbol]', coin)
+    response = request_api(url)
     
-    coinhecko_headers = {
-        'User-Agent': 'Chrome',
-        "accept" : "application/json",
-        "x-cg-demo-api-key": coingecko_apikey
-    }
+    # check if any error exists
+    json_doc = json.loads(response.text)
+    if (json_doc['status'] == 'error'): 
+        raise(f'{json_doc['code']} : {json_doc['message']}\n')
+    # no article found
+    if json_doc['totalResults'] == 0:
+        print("no article found!")
+        return
 
-    fname = 'coinslist'
-    extract_api(coinslist_api, tgt_dir, fname, coinhecko_headers)
+    df = to_dataframe(response)
+    to_json(df,tgt_dir,sub_dir,coin)
 
-load_dotenv('.env')
-extract_data()
