@@ -1,0 +1,7 @@
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=crypto_etl_user
+DB_PWD=crypto_etl
+EXTRACTED_DIR=data/extracted_data
+APIKEY_COINGECKO=CG-W3wy21ZRWFYA9JfacZBrj6gi
+APIKEY_NEWSAPI=c87b85d683244bdeae820c344b29c16d
