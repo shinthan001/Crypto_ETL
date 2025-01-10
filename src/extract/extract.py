@@ -77,5 +77,5 @@ def extract(endpoint:dict, tgt_dir:str, sub_dir:str,
     response = request_api(url, headers=headers)
     df = to_dataframe(response)
 
-    return to_json(df,tgt_dir,sub_dir,sub_dir,fname)
+    return to_json(df,tgt_dir,sub_dir,fname)
 
