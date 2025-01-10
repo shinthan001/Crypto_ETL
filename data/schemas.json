@@ -1,0 +1,42 @@
+{
+    "coins": [
+        {
+            "column_name" : "coin_id",
+            "data_type": "string",
+            "column_position": "1"
+        },
+        {
+            "column_name" : "coin_symbol",
+            "data_type": "string",
+            "column_position": "2"
+        },
+        {
+            "column_name" : "coin_name",
+            "data_type": "string",
+            "column_position": "3"
+        }
+    ],
+    "contracts": [
+        {
+            "column_name" : "contract_id",
+            "data_type": "int",
+            "column_position": "1"
+        },
+        {
+            "column_name" : "coin_id",
+            "data_type": "string",
+            "column_position": "2"
+        },
+        {
+            "column_name" : "contract_token",
+            "data_type": "string",
+            "column_position": "3"
+        },
+        {
+            "column_name" : "contract_platform",
+            "data_type": "string",
+            "column_position": "4"
+        }
+    ]
+
+}
