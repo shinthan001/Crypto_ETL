@@ -51,7 +51,7 @@ def to_json(df:pd.DataFrame, tgt_dir:str,sub_dir:str, fname:str)->str:
     return file_path
 
 def extract(endpoint:dict, tgt_dir:str, sub_dir:str, 
-                         fname:str, coin_id:str=None, coin_name:str=None):
+                         fname:str, coin_id:str=None, coin_name:str=None)->str:
     
     url = endpoint['url']
 
@@ -77,5 +77,5 @@ def extract(endpoint:dict, tgt_dir:str, sub_dir:str,
     response = request_api(url, headers=headers)
     df = to_dataframe(response)
 
-    return to_json(df,tgt_dir,sub_dir,fname)
+    return to_json(df,tgt_dir,sub_dir,sub_dir,fname)
 

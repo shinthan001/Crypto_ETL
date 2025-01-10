@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 def test_extract():
     tgt_dir = os.getenv('EXTRACTED_DIR')
 
-    with open('./data/endpoints.json', 'r') as fh: 
+    with open('./data/extracted_data/endpoints.json', 'r') as fh: 
         endpoints = json.load(fh)
         for ep_name in endpoints:
             extract(endpoints[ep_name],tgt_dir,
