@@ -1,0 +1,28 @@
+{
+    "coins": {
+        "id": "coin_id", 
+        "symbol": "coin_symbol",
+        "name": "coin_name"
+    },
+    "market_assets": {
+        "id": "coin_id", 
+        "current_price": "current_price",
+        "market_cap": "market_cap",
+        "market_cap_rank": "market_cap_rank",
+        "total_supply": "total_supply",
+        "max_supply": "max_supply",
+        "circulating_supply": "circulating_supply",
+        "ath": "all_time_high",
+        "ath_date": "all_time_high_date",
+        "atl": "all_time_low",
+        "atl_date": "all_time_low_date",
+        "last_updated": "last_updated"
+    },
+    "candlesticks": {
+        "0": "timestamp",
+        "1": "open",
+        "2": "high",
+        "3": "low",
+        "4": "close"
+    }
+}
