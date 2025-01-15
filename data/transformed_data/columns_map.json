@@ -2,10 +2,7 @@
     "coins": {
         "id": "coin_id", 
         "symbol": "coin_symbol",
-        "name": "coin_name"
-    },
-    "market_assets": {
-        "id": "coin_id", 
+        "name": "coin_name",
         "current_price": "current_price",
         "market_cap": "market_cap",
         "market_cap_rank": "market_cap_rank",
