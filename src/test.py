@@ -13,9 +13,14 @@ def test_transform():
 
     col_map_path = f'./{transformed_dir}/columns_map.json'
     col_map = transform.read_column_maps(col_map_path)
-    p = transform.transform_coins(extracted_dir, transformed_dir, col_map)
-    p = transform.transform_candlesticks(extracted_dir, transformed_dir, col_map)
-    p.join(), p.join()
+
+    thread_list = []
+
+    thread_list.append(transform.transform_coins(extracted_dir, transformed_dir, col_map))
+    thread_list.append(transform.transform_candlesticks(extracted_dir, transformed_dir, col_map))
+    thread_list.append(transform.transform_news(extracted_dir,transformed_dir, col_map))
+    
+    for t in thread_list: t.join()
     transform.transform_timestamp(transformed_dir, transformed_dir)
 
 

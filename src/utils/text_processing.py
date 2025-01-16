@@ -4,7 +4,7 @@ import spacy
 import nltk
 from nltk.corpus import stopwords
 import contractions
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from textblob import TextBlob
 
 nlp = spacy.load('en_core_web_sm')
 nltk.download('stopwords')
@@ -28,12 +28,18 @@ def lemmatize(text):
 def remove_stopwords(tokens):
     return " ".join(str(token) for token in tokens if(nlp.vocab[token].is_stop == False))
 
-def preprocess(text, do_lemmatize=True):
+def preprocess(text):
     get_stopwords()
     text = clean_text(text)
     tokens = lemmatize(text)
     tokens = remove_stopwords(tokens)
     return tokens
 
-def extract_sentiment():
-    analyzer = SentimentIntensityAnalyzer()
+def get_polarity_score(text):
+    testimonial = TextBlob(text)
+    return testimonial.sentiment.polarity
+
+def sentiment_pipeline(text):
+    clean_txt = preprocess(text)
+    polarity_score = get_polarity_score(clean_txt)
+    return polarity_score

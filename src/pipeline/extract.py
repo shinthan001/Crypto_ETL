@@ -74,8 +74,6 @@ def extract_candlesticks(endpoint:dict, tgt_dir:str, coin_ids:list):
 
     for t in threads: t.join()
 
-    
-
 def extract_news(endpoint:dict, tgt_dir:str, coin_names:list):
     url = build_url(endpoint)
     headers = build_header(endpoint)
