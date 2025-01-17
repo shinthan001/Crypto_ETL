@@ -1,0 +1,46 @@
+{
+    "coinslist": 
+    {
+        "url" : "https://api.coingecko.com/api/v3/coins/markets?",
+        "apikey_in_headers": "x-cg-demo-api-key",
+        "headers" : {
+            "accept": "application/json",
+            "x-cg-demo-api-key" : "APIKEY_COINGECKO"
+        },
+        "params": {
+            "vs_currency" : "usd",
+            "order": "market_cap_desc",
+            "per_page": 50
+        }
+    },
+
+    "candlesticks": 
+    {
+        "url" : "https://api.coingecko.com/api/v3/coins/[coin_id]/ohlc?",
+        "apikey_in_headers": "x-cg-demo-api-key",
+        "headers" : {
+            "accept": "application/json",
+            "x-cg-demo-api-key" : "APIKEY_COINGECKO"
+        },
+        "params": {
+            "vs_currency" : "usd",
+            "days": 31
+        }
+    },
+
+    "news": 
+    {
+        "url" : "https://newsapi.org/v2/everything?q=[coin_name]&",
+        "apikey_in_headers": "x-api-key",
+        "headers" : {
+            "x-api-key" : "APIKEY_NEWSAPI"
+        },
+        "params": {
+            "sortBy": "popularity",
+            "language": "en"
+        },
+        "params_to_replace": {
+            "from": -31
+        }
+    }
+}
