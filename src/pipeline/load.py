@@ -18,9 +18,11 @@ def to_sql(df:pd.DataFrame, db_conn_uri:str, ds_name:str):
     df.to_sql(
         name=ds_name,
         con = db_conn_uri,
-        if_exists='append',
+        if_exists='replace',
         index=False
     )
+
+
 
 
 def load():

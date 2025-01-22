@@ -1,95 +1,84 @@
-import os
-import time
-import requests
-import threading
+import numpy as np
 import pandas as pd
 from io import StringIO 
 from pathlib import Path
-from utils.helpers import threaded, get_date, to_dataframe, to_json
+import os, logging, json, requests
+from utils.helpers import threaded
 
-def get_proxies()->dict:
-    http_proxy = os.getenv('HTTP_PROXY')
-    https_proxy = os.getenv('HTTPS_PROXY')
+def save_df_2_json(df:pd.DataFrame, path:str):
+    if(len(df) == 0): 
+        logging.info(f"No data. Dataframe Length: {len(df)}")
+        return
+    parent_dir = Path(path).parent.absolute()
+    os.makedirs(f'{parent_dir}', exist_ok=True)
+    df.to_json(path, orient='records', lines=True)
+    logging.info(f"Successfully saved to {path}.\n")
 
-    return {
-        "http" : http_proxy, 
-        "https" : https_proxy
-    }
-
-def get_ssl_cert()->str:
-    return os.getenv('SSL_VERIFY')
-
-def request_api(url:str, headers:dict=None)->requests.models.Response:
-    proxies = get_proxies()
-    ssl_cert = get_ssl_cert()
-    print(f"Sending Request to URL: {url}")
-    response = requests.get(url,headers=headers, proxies=proxies, verify=ssl_cert)
+def request_url(url:str, headers:dict=None)->requests.models.Response:
+    logging.info(f"Sending Request to URL: {url}")
+    response = requests.get(url,headers=headers)
     response.raise_for_status()
     return response
-    
-    print(f"Successfully saved to {file_to_save}.\n")
 
 def build_header(endpoint:dict)->dict:
-    headers = None
-    if 'headers' in endpoint:
-        headers = endpoint['headers']
-        apiKey_key = endpoint['apikey_in_headers']
-        apiKey_value = os.getenv(headers[apiKey_key])
-        headers[apiKey_key] = apiKey_value
+    headers = endpoint['headers']
+    apiKey_key_env = endpoint['apikey_in_headers']
+    headers[apiKey_key_env] = os.getenv(headers[apiKey_key_env])
     return headers
 
 def build_url(endpoint:str)->str:
     url = endpoint['url']
     if 'params' in endpoint:
-        params = endpoint['params']
-        params_str = '&'.join([f'{k}={v}' for k,v in params.items()])
-        url = url + params_str
+        url = url + '&'.join([f'{k}={v}' for k,v in 
+                              endpoint['params'].items()])
     return url
 
+def process_endpoint(url:str, headers:dict, tgt_path:str):
+    response = request_url(url, headers)
+    df = pd.read_json(StringIO(response.text))
+    save_df_2_json(df,tgt_path)
+
+### customized extract modules for particular APIs
 @threaded
-def extract(url:str, headers:dict, file_to_save:str)->threading.Thread:
-    response = request_api(url, headers=headers)
-    df = to_dataframe(response.text)
-    to_json(df,file_to_save)
+def extract_coinslist(endpoint_info:dict, coins_list:np.array, tgt_dir:str):
+    url, headers = build_url(endpoint_info), build_header(endpoint_info)
+    tgt_path = f'{tgt_dir}/coinslist/coinslist.json'
+    url = url.replace('[COINS]', ','.join(coins_list))
+    process_endpoint(url, headers, tgt_path)
 
-def extract_coinslist(endpoint:dict, tgt_dir:str)->str:
-    url = build_url(endpoint)
-    headers = build_header(endpoint)
-    file_to_save = f'{tgt_dir}/coinslist/coinslist.json'
-    t = extract(url, headers,file_to_save)
-    t.join()
-    return file_to_save
+@threaded
+def extract_candlesticks(endpoint_info:dict, coins_list:np.array, tgt_dir:str):
+    url, headers = build_url(endpoint_info), build_header(endpoint_info)
+    for _, coin_id in enumerate(coins_list):
+        tgt_path = f'{tgt_dir}/candlesticks/{coin_id}.json'
+        new_url = url.replace('[COIN_ID]', coin_id)
+        process_endpoint(new_url, headers, tgt_path)
 
-def extract_candlesticks(endpoint:dict, tgt_dir:str, coin_ids:list):
-    url = build_url(endpoint)
-    headers = build_header(endpoint)
-    
-    threads = []
-    for coin_id in coin_ids:
-        file_to_save = f'{tgt_dir}/candlesticks/{coin_id}.json'
-        new_url = url.replace('[coin_id]', coin_id)
-        print(new_url, file_to_save)
-        t = extract(new_url, headers,file_to_save)
-        threads.append(t)
+@threaded
+def extract_news(endpoint_info:dict, coins_list:np.array, tgt_dir:str):
+    url, headers = build_url(endpoint_info), build_header(endpoint_info)
+    for _, coin_id in enumerate(coins_list):
+        tgt_path = f'{tgt_dir}/news/{coin_id}.json'
+        new_url = url.replace('[COIN_NAME]', f'crypto {coin_id}')
+        process_endpoint(new_url, headers, tgt_path)
 
-    for t in threads: t.join()
+def extract():
+    """
+    Main extract function
+    - Process extraction from APIs stored in endpoints.json.
+    """
+    data_dir = os.getenv('DATA_SRC_DIR')
+    tgt_dir = f'{data_dir}/extracted_data'
+    coins_list = pd.read_csv(f'{data_dir}/coins.csv', 
+                             header=None).to_numpy().flatten()
+    endpoints_info = json.load(open(f'{data_dir}/endpoints.json', 'r'))
 
-def extract_news(endpoint:dict, tgt_dir:str, coin_names:list):
-    url = build_url(endpoint)
-    headers = build_header(endpoint)
+    # Append fun_map with customized API extract modules in the future
+    fun_map = {'coinslist' : extract_coinslist,
+               'candlesticks': extract_candlesticks,
+               'news': extract_news,
+    }
 
-    if('params_to_replace' in endpoint):
-        params_to_replace = endpoint['params_to_replace']
-        if('from' in params_to_replace): 
-            new_param = get_date(params_to_replace['from'])
-            url = url + f'&from={new_param}'
-
-    threads = []
-    for coin_name in coin_names:
-        file_to_save = f'{tgt_dir}/news/{coin_name}.json'
-        new_url = url.replace('[coin_name]', coin_name)
-        t = extract(new_url, headers,file_to_save)
-        time.sleep(2)
-        threads.append(t)
-
-    for t in threads: t.join()
+    for name,endpoint_info in endpoints_info.items():
+        extract_fn = fun_map[name]
+        extract_fn(endpoint_info, coins_list, tgt_dir)
