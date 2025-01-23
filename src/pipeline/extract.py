@@ -4,6 +4,7 @@ from io import StringIO
 from pathlib import Path
 import time, os, logging, json, requests
 from utils.helpers import threaded
+from utils.timer import timer
 
 def random_sleep():
     # add this to prevent requesting too much in a short time
@@ -47,7 +48,7 @@ def process_endpoint(url:str, headers:dict, tgt_path:str):
 @threaded
 def extract_coinslist(endpoint_info:dict, coins_list:np.array, tgt_dir:str):
     url, headers = build_url(endpoint_info), build_header(endpoint_info)
-    tgt_path = f'{tgt_dir}/coinslist/coinslist.json'
+    tgt_path = f'{tgt_dir}/coins/coins.json'
     url = url.replace('[COINS]', ','.join(coins_list))
     process_endpoint(url, headers, tgt_path)
 
@@ -67,6 +68,7 @@ def extract_news(endpoint_info:dict, coins_list:np.array, tgt_dir:str):
         new_url = url.replace('[COIN_NAME]', f'crypto {coin_id}')
         process_endpoint(new_url, headers, tgt_path)
 
+@timer
 def extract():
     """
     Main extract function
@@ -74,12 +76,12 @@ def extract():
     """
     data_dir = os.getenv('DATA_SRC_DIR')
     tgt_dir = f'{data_dir}/extracted_data'
-    coins_list = pd.read_csv(f'{data_dir}/coins.csv', 
+    coins_list = pd.read_csv(f'{data_dir}/coins_list.csv', 
                              header=None).to_numpy().flatten()
     endpoints_info = json.load(open(f'{data_dir}/endpoints.json', 'r'))
 
     # Append fun_map with customized API extract modules in the future
-    fun_map = {'coinslist' : extract_coinslist,
+    fun_map = {'coins' : extract_coinslist,
                'candlesticks': extract_candlesticks,
                'news': extract_news,
     }

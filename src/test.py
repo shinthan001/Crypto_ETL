@@ -21,6 +21,6 @@ if __name__ == '__main__':
     configure_root_logger()
     load_dotenv('env')
     # test_extract()
-    test_transform()
-    # test_load()
+    # test_transform()
+    test_load()
 

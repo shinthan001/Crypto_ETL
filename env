@@ -1,7 +1,8 @@
 DB_HOST=localhost
 DB_PORT=5432
+DB_NAME=crypto_etl_db
 DB_USER=crypto_etl_user
-DB_PWD=crypto_etl
+DB_PASS=crypto_etl
 DATA_SRC_DIR=data
 APIKEY_COINGECKO=CG-TibVPDWdcnjhfmNrBcaKXZWQ
 APIKEY_NEWSAPI=c87b85d683244bdeae820c344b29c16d
