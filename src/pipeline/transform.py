@@ -112,6 +112,7 @@ def transform():
 
     sub_dirs = glob.glob(f'{extracted_dir}/*')
     for _,sub_dir in enumerate(sub_dirs):
+        if(os.path.isfile(sub_dir)): continue
         dir_name = os.path.basename(sub_dir)
         tgt_path = f'{transformed_dir}/{dir_name}/{dir_name}.csv'
 

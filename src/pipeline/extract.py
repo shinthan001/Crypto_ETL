@@ -2,8 +2,12 @@ import numpy as np
 import pandas as pd
 from io import StringIO 
 from pathlib import Path
-import os, logging, json, requests
+import time, os, logging, json, requests
 from utils.helpers import threaded
+
+def random_sleep():
+    # add this to prevent requesting too much in a short time
+    time.sleep(np.random.randint(1,3))
 
 def save_df_2_json(df:pd.DataFrame, path:str):
     if(len(df) == 0): 
@@ -37,6 +41,7 @@ def process_endpoint(url:str, headers:dict, tgt_path:str):
     response = request_url(url, headers)
     df = pd.read_json(StringIO(response.text))
     save_df_2_json(df,tgt_path)
+    random_sleep()
 
 ### customized extract modules for particular APIs
 @threaded
@@ -79,6 +84,8 @@ def extract():
                'news': extract_news,
     }
 
+    threads = []
     for name,endpoint_info in endpoints_info.items():
         extract_fn = fun_map[name]
-        extract_fn(endpoint_info, coins_list, tgt_dir)
+        threads.append(extract_fn(endpoint_info, coins_list, tgt_dir))
+    for t in threads: t.join()
