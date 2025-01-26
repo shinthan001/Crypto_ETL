@@ -1,5 +1,5 @@
 {
-    "coinslist": {
+    "coins": {
         "id": "coin_id", 
         "symbol": "coin_symbol",
         "name": "coin_name",
@@ -7,7 +7,6 @@
         "market_cap": "market_cap",
         "market_cap_rank": "market_cap_rank",
         "total_supply": "total_supply",
-        "max_supply": "max_supply",
         "circulating_supply": "circulating_supply",
         "ath": "all_time_high",
         "ath_date": "all_time_high_date",

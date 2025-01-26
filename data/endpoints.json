@@ -1,5 +1,5 @@
 {
-    "coinslist": 
+    "coins": 
     {
         "url" : "https://api.coingecko.com/api/v3/coins/markets?",
         "apikey_in_headers": "x-cg-demo-api-key",
