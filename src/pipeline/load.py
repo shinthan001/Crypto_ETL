@@ -43,11 +43,11 @@ def load(ds_names:str=None):
 
     if(not ds_names): ds_names = schemas.keys()
     for ds_name in ds_names:
-        try:
-            logging.info(f"Procesing {ds_name}")
-            mode = 'replace' if(ds_name == 'coins') else 'append' 
-            load_data_to_db(src_dir, ds_name, schemas, db_conn_uri, mode)
-        except NameError as ne:
-            logging.error(ne); pass
-        except Exception as e:
-            logging.error(e); pass
+        # try:
+        logging.info(f"Procesing {ds_name}")
+        mode = 'replace' if(ds_name == 'coins') else 'append' 
+        load_data_to_db(src_dir, ds_name, schemas, db_conn_uri, mode)
+        # except NameError as ne:
+        #     logging.error(ne); pass
+        # except Exception as e:
+        #     logging.error(e); pass

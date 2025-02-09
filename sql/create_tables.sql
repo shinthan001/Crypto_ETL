@@ -1,5 +1,4 @@
-
-DROP TABLE  IF EXISTS coins;
+DROP TABLE IF EXISTS coins; 
 CREATE TABLE coins (
     coin_id VARCHAR(255) NOT NULL,
     coin_symbol VARCHAR(255) NOT NULL,
@@ -17,9 +16,7 @@ CREATE TABLE coins (
     PRIMARY KEY(coin_id)
 );
 
-
-DROP TABLE  IF EXISTS candlesticks;
-CREATE TABLE candlesticks (
+CREATE TABLE IF NOT EXISTS candlesticks (
     candlestick_id SERIAL NOT NULL,
     coin_id VARCHAR(255) NOT NULL,
     timestamp TIMESTAMP NOT NULL,
@@ -30,8 +27,7 @@ CREATE TABLE candlesticks (
     PRIMARY KEY(candlestick_id)
 );
 
-DROP TABLE IF EXISTS time;
-CREATE TABLE time (
+CREATE TABLE IF NOT EXISTS timestamps (
     timestamp TIMESTAMP NOT NULL,
     hour INT NOT NULL,
     day INT NOT NULL,
@@ -41,8 +37,7 @@ CREATE TABLE time (
     PRIMARY KEY(timestamp)
 );
 
-DROP TABLE IF EXISTS news;
-CREATE TABLE news (
+CREATE TABLE IF NOT EXISTS news (
 	news_id SERIAL NOT NULL,
     coin_id VARCHAR(255) NOT NULL,
     month INT NOT NULL,
