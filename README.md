@@ -10,7 +10,7 @@ This is an ETL pipeline to extract OHLC data and info of top 50 crypto coins by 
 ## Project Structure
 - This is the high level architecture of this project.
     <br>
-    <img src='./img/architecture.png' width='100%'>
+    <img src='./img/architecture.png' width='80%'>
 
 - I use Python to build all logics in the pipeline, Airflow as orchestration tool and Postgres for data warehouse. Metabase is used for downstream tasks such as Dashboard.
 
@@ -24,7 +24,7 @@ This is an ETL pipeline to extract OHLC data and info of top 50 crypto coins by 
 
 - This is the simple ER Diagram for Data Warehouse built based on Star Schema.
     <br>
-    <img src='./img/simple_logical_ERD.png' width='100%'>
+    <img src='./img/simple_logical_ERD.png' width='50%' height='50%'>
 
 ## Project Setup
 1. Create codespace.
@@ -66,13 +66,10 @@ This is an ETL pipeline to extract OHLC data and info of top 50 crypto coins by 
     ```
 - Run `Crypto_ETL` DAG. Demo Video:
     <br>
-    <video width="100%" controls>
-    <source src="./img/airflow_dag_recording.mp4" type="video/mp4">
-    </video>
+    [![Watch the video](https://img.youtube.com/vi/q80rhF_lVUw/0.jpg)](https://www.youtube.com/watch?v=q80rhF_lVUw)
 
 ## Metabase Dashboard
 - After running pipeline, Open link from Port 3000 and enter email address:`admin@gmail.com` and password:`zoro123`. `Crypto_ETL` dashboard should be ready to use. Demo Video:
     <br>
-    <video width="80%" height="80%" controls>
-    <source src="./img/dashboard_recording.mp4" type="video/mp4">
-    </video>
+    [![Watch the video](https://img.youtube.com/vi/95KtpyL74oI/0.jpg)](https://www.youtube.com/watch?v=95KtpyL74oI)
+    
