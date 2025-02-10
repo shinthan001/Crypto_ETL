@@ -115,7 +115,9 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ${AIRFLOW_PROJ_DIR:-.}/metabase-data:/metabase-data
+      - ./metabase-data:/metabase-data
+    environment:
+      - MB_DB_FILE=/metabase-data/metabase.db
 
   # pgadmin:
   #   image: dpage/pgadmin4
