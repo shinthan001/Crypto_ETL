@@ -130,7 +130,7 @@
             "column_position": 6
         }
     ],
-    "time": [
+    "timestamps": [
         {
             "column_name" : "timestamp",
             "data_type": "string",

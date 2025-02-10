@@ -1,4 +1,4 @@
-import logging
+import os,logging
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 
@@ -10,8 +10,11 @@ def _get_column_names(schemas, ds_name, sorting_key='column_position'):
 def load_bulk_data(table, schemas, src_file, conn_id):
     hook = PostgresHook(postgres_conn_id=conn_id)
     columns = _get_column_names(schemas, table)
+    columns = ','.join(columns)
     logging.info(f"Loading data from {src_file} to {table}")
+    
+    sql = f"COPY {table}({columns}) FROM stdin WITH DELIMITER as ','"    
     hook.copy_expert(
-        sql=f"COPY {table}({','.join(columns)}) FROM stdin WITH DELIMITER as ','",
+        sql=sql,
         filename=src_file
     )

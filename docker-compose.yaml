@@ -109,13 +109,13 @@ services:
       start_period: 5s
     restart: always
 
-  # metabase:
-  #   image: metabase/metabase:latest
-  #   restart: always
-  #   ports:
-  #     - 3000:3000
-  #   volumes:
-  #     - ${AIRFLOW_PROJ_DIR:-.}/metabase-data:/metabase-data
+  metabase:
+    image: metabase/metabase:latest
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ${AIRFLOW_PROJ_DIR:-.}/metabase-data:/metabase-data
 
   # pgadmin:
   #   image: dpage/pgadmin4
