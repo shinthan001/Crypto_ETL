@@ -30,8 +30,16 @@ This is an ETL pipeline to extract OHLC data and info of top 50 crypto coins by 
 1. Create codespace.
     <br><img src='./img/codespace_init.png' width='60%'>
 
-2. Ensure to put your CoinGecko and NewsAPI API Keys in .env file.
-    <br><img src='./img/API_Keys.png' width='80%'>
+2. Ensure to create `/env/.env` as follows. 
+    ```
+    POSTGRES_CONN_ID=crypto_etl
+    DATA_SRC_DIR=data
+    META_DATA_DIR=meta_data
+    APIKEY_COINGECKO=<YOUR_API_KEY>
+    APIKEY_NEWSAPI=<YOUR_API_KEY>
+    SQL_CREATE_TABLE=sql/create_tables.sql
+    CHUNK_SIZE=1000
+    ```
 
 3. Build Airflow image by running this command in terminal.
     ```bash
